@@ -46,7 +46,7 @@ def vectorizer(ds):
     return vectorized_lst_new
 
 def get_prediction(vectorized_text):
-    prediction = model.predict(vectorized_text)
+    prediction = model.predict(vectorized_text)[0]
     if prediction == 1:
         return 'negative'
     else:
