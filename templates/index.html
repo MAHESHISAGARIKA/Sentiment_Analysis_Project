@@ -1,50 +1,76 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <Link rel="stylesheet" href="{{url_for('static', filename='css/main.css')}}"></Link>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <title>App</title>
+    <title>Sentiment Analysis App</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
 </head>
+
 <body>
-    <div class="split left">
-        <div class="centered">
-            <img src="../static/products/image.png" alt="">
+    <div class="app-wrapper">
+
+        <div class="hero-section">
+            <div class="hero-content">
+                <img src="{{ url_for('static', filename='products/image.png') }}" alt="Sentiment Analysis" class="hero-img">
+                <h1>Sentiment Analysis</h1>
+                <p>Analyze customer comments and identify whether the sentiment is positive or negative.</p>
+            </div>
         </div>
-    </div>
 
-    <div class="split right">
-        <div class="container mt-5 mb-5">
-            <div class="d-flex justify-content-center row">
-                <div class="d-flex flex-column col-md-8">
-                    <div>
-                        <label for="">Positive Sentiments : {{ data.positive }}</label>
-                    </div>
-                    <div>
-                        <label for="">Negative Sentiments : {{ data.negative }}</label>
-                    </div>
-                    <div>
-                        <form method="post">
-                          <textarea name="text"></textarea>
-                          <input type="submit">
-                        </form>
+        <div class="main-section">
+            <div class="card app-card">
+                <h2>Analyze Comment</h2>
+                <p class="subtitle">Enter a review or comment below.</p>
+
+                <div class="stats-row">
+                    <div class="stat-card positive-card">
+                        <h3>{{ data.positive }}</h3>
+                        <p>Positive</p>
                     </div>
 
-                    <div class="coment-bottom bg-white p-2 px-4">
+                    <div class="stat-card negative-card">
+                        <h3>{{ data.negative }}</h3>
+                        <p>Negative</p>
+                    </div>
+
+                    <div class="stat-card total-card">
+                        <h3>{{ data.total }}</h3>
+                        <p>Total</p>
+                    </div>
+                </div>
+
+                <form method="post" class="comment-form">
+                    <textarea name="text" placeholder="Type your comment here..." required></textarea>
+                    <button type="submit">Analyze Sentiment</button>
+                </form>
+
+                <div class="history-section">
+                    <h4>Recent Comments</h4>
+
+                    {% if data.reviews %}
                         {% for review in data.reviews %}
-                        <hr/>
-                          <div
-                              class="commented-section mt-2">
-                              <div class="d-flex flex-row align-items-center commented-user">
-                                  </div>
-                                  <div class="text-nowrap bd-highlight"><span>{{ review }}</span></div>
-                                  <hr/>
+                            <div class="review-card">
+                                <div class="review-text">
+                                    {{ review.text }}
+                                </div>
+
+                                {% if review.sentiment == "positive" %}
+                                    <span class="badge-positive">Positive</span>
+                                {% else %}
+                                    <span class="badge-negative">Negative</span>
+                                {% endif %}
+                            </div>
                         {% endfor %}
-                      </div>
+                    {% else %}
+                        <p class="empty-text">No comments analyzed yet.</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
+
     </div>
-    
 </body>
 </html>

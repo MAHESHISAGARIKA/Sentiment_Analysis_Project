@@ -15,6 +15,7 @@ def index():
     data["reviews"] = reviews
     data["positive"] = positive
     data["negative"] = negative
+    data["total"] = positive + negative
 
     logging.info("========== Open home page ============")
 
@@ -25,7 +26,11 @@ def index():
 def my_post():
     global positive, negative
 
-    text = request.form["text"]
+    text = request.form["text"].strip()
+
+    if text == "":
+        return redirect(request.url)
+
     logging.info(f"Text : {text}")
 
     preprocessed_txt = preprocessing(text)
@@ -39,7 +44,10 @@ def my_post():
     else:
         positive += 1
 
-    reviews.insert(0, text)
+    reviews.insert(0, {
+        "text": text,
+        "sentiment": prediction
+    })
 
     return redirect(request.url)
 
